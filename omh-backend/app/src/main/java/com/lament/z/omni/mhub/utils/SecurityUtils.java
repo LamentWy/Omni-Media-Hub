@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
@@ -33,10 +34,28 @@ public final class SecurityUtils {
 	 *
 	 * */
 	public static Mono<String> getCurrentUserNameFromSecurityContext() {
+
+		//checkUserIsLogin();
+
 		return ReactiveSecurityContextHolder.getContext()
+				.doOnNext(securityContext -> {
+					if (securityContext != null) {
+						log.debug("SecurityUtils | getCurrentUserNameFromSecurityContext| securityContext is {} ",
+								securityContext.getClass().getSimpleName());
+					}else {
+						log.debug("SecurityUtils | getCurrentUserNameFromSecurityContext| securityContext is null");
+					}
+				})
 				.map(SecurityContext::getAuthentication)
-				.flatMap(auth -> Mono.justOrEmpty(auth.getName()));
+				.flatMap(auth -> {
+					log.debug("Checking Auth isAuthenticated : {} ", auth.isAuthenticated());
+					log.debug("Checking if user is logged in | username: {}", auth.getName());
+					 return Mono.justOrEmpty(auth.getName());
+				});
 	}
+
+
+
 
 	private static String getPrincipalFromAuthentication(Authentication auth) {
 		if (auth == null){

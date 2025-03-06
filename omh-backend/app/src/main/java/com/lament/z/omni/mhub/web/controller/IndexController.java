@@ -3,6 +3,7 @@ package com.lament.z.omni.mhub.web.controller;
 import reactor.core.publisher.Mono;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController

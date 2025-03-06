@@ -1,6 +1,7 @@
 import omniAxios from '@/requests/global-request-config'
 import type { LoginFormState } from '@/views/auth/LoginView.vue'
 import type { RegisterFormState } from '@/views/auth/RegisterView.vue'
+
 // declare params type
 interface RegisterParams {
   loginName: string
@@ -27,12 +28,20 @@ const defaultLoginParams: LoginParams = {
   rememberMe: false,
 }
 
+interface ResetPwdParams {
+  userName: string
+}
+
+const defaultResetPwdParams: ResetPwdParams = {
+  userName: '',
+}
+
 // trasfer
 
 export const transToRegisterParams = (params: RegisterFormState) => {
   defaultRegisterParams.loginName = params.userName
   if (params.nickName === '') {
-    defaultRegisterParams.nickName = '默认昵称'
+    defaultRegisterParams.nickName = '请修改昵称'
   } else {
     defaultRegisterParams.nickName = params.nickName
   }
@@ -47,6 +56,12 @@ export const transToLoginParams = (params: LoginFormState) => {
   defaultLoginParams.rememberMe = params.remember
   return defaultLoginParams
 }
+
+export const transToResetPwdParams = (params: string) => {
+  defaultResetPwdParams.userName = params
+  return defaultResetPwdParams
+}
+
 // register
 export const userRegister = async (params: RegisterParams) => {
   // todo encode password
@@ -61,6 +76,7 @@ export const userRegister = async (params: RegisterParams) => {
   })
 }
 
+
 /**
  * 用户登录:
  *
@@ -69,9 +85,7 @@ export const userRegister = async (params: RegisterParams) => {
 export const userLogin = async (params: LoginParams) => {
   // 指定 content-type: 自定义一个 header 并添加到 request 中即可。
   // headers: { "Content-Type": "application/json" },
-  const res = omniAxios
-
-    .request({
+  return omniAxios.request({
       url: '/z/login',
       method: 'post',
       data: params,
@@ -86,6 +100,12 @@ export const userLogin = async (params: LoginParams) => {
         localStorage.removeItem('OMH-Token')
       }
     })
+}
 
-  return res
+export const resetPassword = async (params: ResetPwdParams) => {
+  return omniAxios.request({
+    url: '/z/reset-pwd',
+    method: 'post',
+    data: params,
+  })
 }

@@ -14,6 +14,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.InsertOnlyProperty;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table
@@ -21,14 +22,17 @@ public class User {
 
 	@Id
 	private Integer id;
+	@InsertOnlyProperty
 	@Column("login_name")
 	private String name;
 	@Column("password_hash")
 	private String password;
 	private String nickName;
 	private Boolean activated;
+	@InsertOnlyProperty
 	@CreatedDate
 	private Instant createdDate;
+	@InsertOnlyProperty
 	@CreatedBy
 	private String createdBy;
 	@LastModifiedDate

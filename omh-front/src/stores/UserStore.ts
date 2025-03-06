@@ -16,7 +16,7 @@ export const defaultUserStatus: UserStatus = {
 }
 
 // try Option Store style
-// Using a Option Object as param for defineStore method which has state、actions and getters.
+// Using an Option Object as param for defineStore method which has state、actions and getters.
 // useXXX 为组合式函数命名的约定格式
 export const useUserStore = defineStore('userStore', {
   state: (): UserStatus => ({ ...defaultUserStatus }),

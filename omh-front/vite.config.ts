@@ -11,14 +11,24 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 export default defineConfig({
   server: {
     port: 4000,
+    fs: {
+      strict: false
+    }
   },
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('media-'),
+        },
+      },
+    }),
     vueJsx(),
     vueDevTools(),
     Components({
       resolvers: [
         AntDesignVueResolver({
+          resolveIcons: true,
           importStyle: false,
         }),
       ],
@@ -29,4 +39,5 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  assetsInclude: ['**/*.mkv']
 })

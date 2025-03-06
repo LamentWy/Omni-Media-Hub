@@ -24,14 +24,25 @@ public class WebConfig {
 
 	@Bean
 	public CorsConfigurationSource reactiveCorsConfig(){
-		UrlBasedCorsConfigurationSource reactiveSource = new UrlBasedCorsConfigurationSource();
+
+		UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration corsConfig = omniProperties.getCors();
+
 		if (!CollectionUtils.isEmpty(corsConfig.getAllowedOrigins()) ||
 		!CollectionUtils.isEmpty(corsConfig.getAllowedOriginPatterns())){
 			log.debug("Setting CORS Rules");
-			reactiveSource.registerCorsConfiguration("/z/**", corsConfig);
+			corsConfigSource.registerCorsConfiguration("/z/**", corsConfig);
+//			corsConfigSource.registerCorsConfiguration("/v3/api-docs", corsConfig);
+//			corsConfigSource.registerCorsConfiguration("/swagger-ui/**", corsConfig);
 		}
-		return reactiveSource;
+		return corsConfigSource;
 	}
 
+
+//	@Bean
+//	@Order(-99)
+//	public WebExceptionHandler customExceptionHandler(ObjectMapper mapper, ExceptionTranslator customTranslator){
+//
+//		return new CustomReactiveWebExceptionHandler(customTranslator,mapper);
+//	}
 }

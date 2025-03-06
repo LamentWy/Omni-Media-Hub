@@ -4,7 +4,7 @@ import axios from 'axios'
 
 const omniAxios = axios.create({
   // backend
-  baseURL: 'http://localhost:8080/',
+  baseURL: 'http://192.168.0.102:8080/',
   timeout: 50000,
 })
 
@@ -19,6 +19,7 @@ omniAxios.interceptors.request.use(
       if (!config.headers) {
         omniAxios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       } else {
+        console.log('this branch : ' + token)
         config.headers.Authorization = `Bearer ${token}`
       }
     }
@@ -35,12 +36,9 @@ omniAxios.interceptors.response.use(
   function (response) {
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
-    console.log(response)
 
     const { data } = response
-    console.log(data)
-    // Todo 根据自定义响应码制定通用跳转逻辑
-    // 比如未登录时访问受限资源跳转登录页面等等
+    console.log('success | code: ' + data)
 
     return response
   },
@@ -51,11 +49,12 @@ omniAxios.interceptors.response.use(
 
     if (error.response) {
       if (status === 403 || status === 401) {
-        // 弹出错误信息
-        console.log(status)
+        //
+        console.log('failed | code: ' + status + ' reason: ' + error.response.statusText)
       }
       if (status >= 500) {
         console.log('Server Error!')
+        // todo jump to sever-error-page
       }
     }
 

@@ -15,13 +15,15 @@ spring:
 
 omni-media-hub:
   cors:
-    allowed-origins: 'http://localhost:8080/,http://127.0.0.1:8080/,http://localhost:4000/,http://127.0.0.1:4000/'
+    # front-end's domain
+    allowed-origins: 'http://localhost:8080/,http://127.0.0.1:8080/,http://localhost:4000/,http://127.0.0.1:4000/,http://192.168.0.102:4000/'
     # if u want use domain
     # allowed-origin-patterns: 'https://*.lament-z.com'
     allowed-methods: '*'
     allowed-headers: '*'
     allow-credentials: true
     max-age: 1800
+
   security:
     auth:
       jwt:
@@ -31,9 +33,16 @@ omni-media-hub:
         # 24h | 24*60*60
         validity-in-seconds: 86400
         remember-me-validity-in-seconds: 2592000
+  scanner:
+    # default is {userHome}/resource
+    root-dir: "/Users/lament/Downloads"
 
+
+springdoc:
+  swagger-ui:
+    path: "/z/swagger"
+  webjars:
+    prefix: ""
 logging:
   level:
-    com.lament.z.omni.mhub: debug
-    org.springframework: debug
-
+    root: debug

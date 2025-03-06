@@ -9,7 +9,6 @@
       layout="vertical"
       style="margin: 40px auto"
       @finish="submitLoginForm"
-      @finishFailed="onFinishFailed"
     >
       <a-form-item
         label="输入账号 :"
@@ -46,9 +45,11 @@
         </a-button>
       </a-form-item>
       <a-form-item>
-        <a-typography-link class="login-form-reset" href="/reset-password">
-          重置密码
-        </a-typography-link>
+        <!--   重置密码     -->
+
+        <ResetPasswordModal class="login-form-reset" />
+
+        <!--   注册账号     -->
         <RegisterModal />
       </a-form-item>
     </a-form>
@@ -61,6 +62,7 @@ import { getCurrentUserInfo } from '@/requests/user/user'
 import { reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
+import ResetPasswordModal from '@/components/auth/ResetPasswordModal.vue'
 export interface LoginFormState {
   username: string
   password: string
@@ -77,9 +79,10 @@ const open = defineModel()
 
 const submitLoginForm = (loginFormState: LoginFormState) => {
   const loginParams = transToLoginParams(loginFormState)
-
-  userLogin(loginParams).then(() => {
-    getCurrentUserInfo().then(() => {
+  // 要扁平，不要嵌套 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises
+  userLogin(loginParams)
+    .then(getCurrentUserInfo)
+    .then(() => {
       open.value = false
       // login success -> goto home page.
       message.success({
@@ -92,12 +95,18 @@ const submitLoginForm = (loginFormState: LoginFormState) => {
       })
       router.push('/')
     })
-  })
+    .catch((error) => {
+      message.error({
+        content: () => '登录失败，请检查账号密码.  code: '+error.response.status,
+        duration: 2,
+        class: 'login-failed-msg',
+        style: { marginTop: '15vh', }
+      })
+    })
+
 }
 
-const onFinishFailed = (errorInfo: unknown) => {
-  console.log('Failed:', errorInfo)
-}
+// 计算登录按钮状态
 const disabled = computed(() => {
   return !(loginFormState.username && loginFormState.password)
 })
@@ -112,7 +121,7 @@ const disabled = computed(() => {
 #omh-login-form .remember {
   float: right;
 }
-#omh-login-form .login-form-reset {
+#omh-login-form  .login-form-reset {
   float: right;
 }
 #omh-login-form .login-form-button {

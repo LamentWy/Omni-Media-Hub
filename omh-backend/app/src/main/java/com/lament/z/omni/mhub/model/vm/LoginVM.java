@@ -2,10 +2,15 @@ package com.lament.z.omni.mhub.model.vm;
 
 import java.util.StringJoiner;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
 public class LoginVM {
 
 	// same as loginName
+	@NotEmpty
 	private String userName;
+	@Size(min = 5)
 	private String password;
 	private Boolean rememberMe;
 

@@ -2,12 +2,14 @@ package com.lament.z.omni.mhub.web.controller;
 
 
 import com.lament.z.omni.mhub.model.dto.UserDTO;
-import com.lament.z.omni.mhub.utils.SecurityUtils;
-import com.lament.z.omni.mhub.service.UserService;
 import com.lament.z.omni.mhub.model.vm.AdminUserVM;
+import com.lament.z.omni.mhub.model.vm.LoginNameVM;
 import com.lament.z.omni.mhub.model.vm.LoginVM;
+import com.lament.z.omni.mhub.service.UserService;
+import com.lament.z.omni.mhub.utils.SecurityUtils;
 import com.lament.z.omni.mhub.web.exception.UserAccountException;
 import com.lament.z.omni.mhub.web.response.JwtToken;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
@@ -18,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,7 +58,7 @@ public class WebBasicController {
 	}
 
 	@PostMapping("/login")
-	public Mono<ResponseEntity<JwtToken>> login(@RequestBody Mono<LoginVM> loginMono){
+	public Mono<ResponseEntity<JwtToken>> login(@RequestBody @Valid Mono<LoginVM> loginMono){
 
 		return loginMono.flatMap(
 				login -> reactiveAuthenticationManager
@@ -72,6 +73,15 @@ public class WebBasicController {
 				});
 	}
 
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "登录名错误，重置失败！")
+	@PostMapping("/reset-pwd")
+	public Mono<ResponseEntity<Object>> resetPassword(@RequestBody LoginNameVM login) {
+		log.info("resetPassword | userName = {} ", login.getUserName());
+		return userService.resetPassword(login.getUserName())
+				.then(Mono.just( ResponseEntity.noContent().build()));
+	}
+
+
 	/**
 	 * get current userInfo
 	 *
@@ -79,12 +89,14 @@ public class WebBasicController {
 	 * @throws RuntimeException {@code 500 Internal Server Error}, if can't find user.
 	 *
 	 * */
-	@GetMapping("cur")
+	@GetMapping("/cur")
 	public Mono<UserDTO> getCurrentUser(){
 
 		return userService.getCurrentUserWithAuth()
 				.map(UserDTO::new)
 				.switchIfEmpty(Mono.error(new UserAccountException()));
 	}
+
+
 
 }

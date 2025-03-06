@@ -27,6 +27,7 @@
   box-sizing: border-box;
   position: fixed;
   z-index: 1030;
+  height: 48px;
 }
 
 #common-layout .common-layout-a-footer {
@@ -38,11 +39,12 @@
   right: 0;
   min-width: 100vw;
   text-align: center;
-  padding: 16px;
+  padding: 2px;
+  height: 24px;
 }
 
 #common-layout .common-layout-a-content {
-  margin-top: 64px;
+  margin-top: 60px;
   margin-bottom: 40px;
   /* height: calc(100% - 104px); */
   max-height: 80%;

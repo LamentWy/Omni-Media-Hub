@@ -2,6 +2,23 @@ package com.lament.z.omni.mhub.config.omni;
 
 
 public interface OmniDefault {
+	String OS = System.getProperty("os.name").toLowerCase();
+	String UserHome = System.getProperty("user.home");
+
+	interface Scanner{
+		String defaultMacRootDir = "/resource";
+		String defaultWinRootDir = "\\resource";
+		static String getDefaultRoot(){
+			if (OS.contains("windows")){
+				return UserHome + defaultWinRootDir;
+			}
+			if (OS.contains("mac")){
+				return UserHome + defaultMacRootDir;
+			}
+
+			return "";
+		}
+	}
 
 	interface Security{
 		String defaultCSP =

@@ -7,4 +7,8 @@ public class SecurityConstants {
 	public static final String SYSTEM = "SYSTEM";
 	// this should not needed.
 	public static final String ANONYMOUS = "ANONYMOUS";
+
+	private SecurityConstants() {
+		//
+	}
 }

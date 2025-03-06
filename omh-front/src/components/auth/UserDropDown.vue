@@ -1,13 +1,14 @@
-<template>
+<template >
   <a-dropdown placement="bottom">
     <a class="ant-dropdown-link" @click.prevent>
-      {{ nn }}
+      {{ userStore.userInfo.nickName }}
       <CaretDownOutlined />
     </a>
     <template #overlay>
       <a-menu @click="onClick">
-        <a-menu-item key="user-info"> 1st menu item </a-menu-item>
-
+        <a-menu-item key="user-info"> 用户信息 </a-menu-item>
+        <a-menu-divider />
+        <a-menu-item key="admin-page" v-if="userStore.userDto.roles[0] ==='ROLE_ADMIN'"> 后台管理 </a-menu-item>
         <a-menu-divider />
         <a-menu-item key="logout">退出登录</a-menu-item>
       </a-menu>
@@ -21,9 +22,6 @@ import type { MenuProps } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 
-const { nn } = defineProps({
-  nn: { type: String },
-})
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -32,11 +30,20 @@ const logout = async () => {
   localStorage.removeItem('OMH-Token')
   sessionStorage.removeItem('OMH-Token')
   userStore.logout()
-  router.push('/')
+  await router.push('/')
 }
 
 const onClick: MenuProps['onClick'] = ({ key }) => {
   console.log(`Click on item ${key}`)
+
+  if (key === 'user-info'){
+    router.push('/z/user')
+  }
+
+  if (key === 'admin-page'){
+    router.push('/z/admin')
+  }
+
   if (key === 'logout') {
     logout().then(() => {
       message.success({

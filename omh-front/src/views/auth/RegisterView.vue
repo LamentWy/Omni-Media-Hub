@@ -124,7 +124,7 @@ const submitRegisterForm = () => {
       message.success({
         content: () => '注册成功！',
         duration: 2,
-        class: ' regist-success-msg',
+        class: ' register-success-msg',
         style: {
           marginTop: '20vh',
         },
@@ -138,7 +138,7 @@ const submitRegisterForm = () => {
           marginTop: '20vh',
         },
       })
-      console.log('Errors:' + errors)
+      console.log('Register Errors:' + errors)
     })
 }
 const handleFinishFailed = (errors: unknown) => {

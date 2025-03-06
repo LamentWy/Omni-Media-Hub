@@ -1,9 +1,9 @@
 package com.lament.z.omni.mhub.config;
 
 import com.lament.z.omni.mhub.config.omni.OmniMediaHubProperties;
-import com.lament.z.omni.mhub.web.filter.OmniWebFilter;
-import com.lament.z.omni.mhub.model.User;
 import com.lament.z.omni.mhub.security.SecurityConstants;
+import com.lament.z.omni.mhub.utils.SecurityUtils;
+import com.lament.z.omni.mhub.web.filter.OmniWebFilter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +14,6 @@ import org.springframework.security.authentication.UserDetailsRepositoryReactive
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -69,17 +66,18 @@ public class SecurityConfig {
 				.authorizeExchange(authEx ->
 						authEx.pathMatchers("/").permitAll()
 								.pathMatchers("/*.*").permitAll()
+								.pathMatchers("/z/swagger").permitAll() // for dev
+								.pathMatchers("/z/swagger-ui/**").permitAll()
+								.pathMatchers("/logout").permitAll()
 								.pathMatchers("/z/register").permitAll()
 								.pathMatchers("/z/login").permitAll()
+								.pathMatchers("/z/reset-pwd").permitAll()
+								.pathMatchers("/z/res/**").permitAll() // for dev
 								.pathMatchers("/z/admin/**").hasAuthority(SecurityConstants.ADMIN)
 								.pathMatchers("/z/**").authenticated()
 								.pathMatchers("/services/**").authenticated()
-								.pathMatchers("/v3/api-docs/**").hasAuthority(SecurityConstants.ADMIN)
-								.pathMatchers("/management/health").permitAll()
-								.pathMatchers("/management/health/**").permitAll()
-								.pathMatchers("/management/info").permitAll()
-								.pathMatchers("/management/prometheus").permitAll()
-								.pathMatchers("/management/**").hasAuthority(SecurityConstants.ADMIN)
+								.pathMatchers("/v3/api-docs/**").permitAll()
+//								.pathMatchers("/v3/api-docs/**").hasAuthority(SecurityConstants.ADMIN)
 
 				)
 				.httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
@@ -91,12 +89,7 @@ public class SecurityConfig {
 	 */
 	@Bean
 	public ReactiveAuditorAware<String> reactiveAuditorAware() {
-		return () -> ReactiveSecurityContextHolder.getContext()
-				.map(SecurityContext::getAuthentication)
-				.filter(Authentication::isAuthenticated)
-				.map(Authentication::getPrincipal)
-				.map(User.class::cast)
-				.map(User::getName);
+		return SecurityUtils::getCurrentUserNameFromSecurityContext;
  	}
 
 	/**

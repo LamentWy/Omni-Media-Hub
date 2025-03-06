@@ -8,9 +8,10 @@ import org.springframework.web.cors.CorsConfiguration;
 public class OmniMediaHubProperties {
 	private final CorsConfiguration cors = new CorsConfiguration();
 	private final Security security = new Security();
-
+	private final Scanner scanner = new Scanner();
 
 	public OmniMediaHubProperties() {
+		//
 	}
 
 	public CorsConfiguration getCors() {
@@ -19,6 +20,17 @@ public class OmniMediaHubProperties {
 
 	public Security getSecurity() {
 		return security;
+	}
+
+	public Scanner getScanner() {
+		return scanner;
+	}
+
+	public static class Scanner{
+		// defaultDir  {userHome}/resource
+		private String rootDir = OmniDefault.Scanner.getDefaultRoot();
+		public String getRootDir() {return rootDir;}
+		public void setRootDir(String rootDir) {this.rootDir = rootDir;}
 	}
 
 	public static class Security{

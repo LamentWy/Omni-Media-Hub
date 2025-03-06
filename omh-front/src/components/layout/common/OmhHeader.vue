@@ -1,14 +1,15 @@
 <template>
   <div id="omh-navbar" class="omh-header">
-    <a-row class="navbar-row">
-      <a-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2">
+    <a-row class="navbar-row" :wrap="false">
+      <!--  logo-col    -->
+      <a-col flex="20px"  >
         <!-- logo -->
         <div class="logo">
-          <img class="logo-img" src="@/assets/logo.svg" />
+          <img class="logo-img" src="@/assets/logo.svg"  alt="logo"/>
         </div>
       </a-col>
 
-      <a-col :xs="14" :sm="17" :md="17" :lg="17" :xl="19" push="12">
+      <a-col flex="5 1 auto">
         <div class="omh-navbar-menu">
           <!-- menu: using @select to route  -->
           <!-- also you can use :items and @click  -->
@@ -24,18 +25,19 @@
           </a-menu>
         </div>
       </a-col>
-      <a-col :xs="2" :sm="1" :md="1" :lg="1" :xl="1">
+      <a-col flex="1 20px">
         <div class="omh-navbar-tools">
           <a-switch>改变主题:未实现</a-switch>
         </div>
       </a-col>
-      <a-col :xs="6" :sm="4" :md="4" :lg="4" :xl="2" push="1">
+      <a-col flex="120px">
         <div class="omh-navbar-auth">
           <div class="auth-switch" v-if="userStore.authenticated">
-            <UserDropDown :nn="nickname" />
+            <UserDropDown />
           </div>
           <div class="auth-switch" v-else>
-            <LoginModel />
+            <a-button type="primary" shape="round" @click="loginSwitch">登录/注册</a-button>
+            <LoginModel v-model="switchState"/>
           </div>
         </div>
       </a-col>
@@ -53,8 +55,9 @@ import UserDropDown from '@/components/auth/UserDropDown.vue'
 const userStore = useUserStore()
 const selectedKeys = ref<string[]>(['/'])
 
-const nickname = ref<string>('')
-nickname.value = userStore.userInfo?.nickName
+const loginState = ref<boolean>(false)
+loginState.value = userStore.authenticated;
+
 
 const router = useRouter()
 router.afterEach((to) => {
@@ -64,17 +67,26 @@ const handleSelect = ({ key }: { key: string }) => {
   console.log(key)
   router.push(key)
 }
+
+const switchState = ref(false)
+
+const loginSwitch = () => {
+  switchState.value = !switchState.value;
+}
 </script>
 
 <style>
+
+
 #omh-navbar .menu {
+  text-align: center;
   background-color: #b2dfdb;
+  height: 48px;
 }
 #omh-navbar .logo-img {
   float: left;
-  width: 60px;
-  height: 31px;
-  margin: 16px 24px 16px 0;
+  width: 20px;
+  margin-top: 24px;
   background: rgba(255, 255, 255, 0.3);
 }
 </style>

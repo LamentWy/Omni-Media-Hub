@@ -9,5 +9,6 @@
 <style>
 #omh-footer a-typography-link {
   color: #212121;
+  padding-bottom: 10px;
 }
 </style>
