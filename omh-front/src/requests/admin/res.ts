@@ -62,6 +62,27 @@ return omniAxios.request({
 })
 }
 
+// 默认合集全部可见
+export const visibleAll = async () => {
+  // 使用 axios.request 发送 get 请求时， data 不会发送给后端
+  return omniAxios.request({
+    url: '/z/admin/res/visible',
+    method: 'put',
+  })
+}
+
+// 清空资源数据
+
+export const truncateRes = async () => {
+  // 使用 axios.request 发送 get 请求时， data 不会发送给后端
+  return omniAxios.request({
+    url: '/z/admin/res/truncate',
+    method: 'delete',
+  })
+}
+
+
+
 // 获取所有合集信息
 export const getResCollections = async ()=>{
   return omniAxios.request({

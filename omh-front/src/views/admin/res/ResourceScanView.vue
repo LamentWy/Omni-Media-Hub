@@ -22,7 +22,15 @@
       如果资源库中的所有资源全部老少皆宜，所有家庭成员均可访问，则可以使用该功能一键公开。否则请在“资源管理”中手动设置哪些“合集”或“资源”可见。<br>
       当然你也可以先全部可见，然后手动设置部分为不可见。<br>
     </p>
-    <a-button type="primary" > 资源全部可见 </a-button>
+    <a-button type="primary" @click="doVisible" > 资源全部可见 </a-button>
+    <a-divider/>
+
+    <h2> 3. 一键清空所有资源数据 </h2>
+    <p>
+      想要重新扫描资源前使用，避免出现大量重复数据。<br>
+      不会删除本地资源，仅清空数据库中的数据。
+    </p>
+    <a-button type="primary" @click="doTruncate" > 清空资源数据 </a-button>
     <a-divider/>
 
   </div>
@@ -31,7 +39,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { type PathParam, resScan } from '@/requests/admin/res.ts'
+import { type PathParam, resScan, truncateRes, visibleAll } from '@/requests/admin/res.ts'
 
 
 
@@ -89,8 +97,45 @@ const doScan = () => {
         style: { marginTop: '15vh', }
       })
     })
-
 }
+
+const doVisible = () => {
+  visibleAll()
+    .then((response)=>{
+      message.success({
+        content: () => '更新成功，默认合集已全部可见。 code:' + response.status,
+        duration: 2,
+        style: { marginTop: '20vh', },
+      })
+    })
+    .catch((error)=>{
+      message.error({
+        content: () => '更新失败。code:' + error.response.status,
+        duration: 3,
+        style: { marginTop: '15vh', },
+      })
+    })
+}
+
+const doTruncate = () => {
+  truncateRes()
+    .then((response)=>{
+      message.success({
+        content: () => '清空成功。 code:' + response.status,
+        duration: 2,
+        style: { marginTop: '20vh', },
+      })
+    })
+    .catch((error)=>{
+      message.error({
+        content: () => '清空失败。code:' + error.response.status,
+        duration: 3,
+        style: { marginTop: '15vh', },
+      })
+    })
+}
+
+
 </script>
 
 <style scoped>

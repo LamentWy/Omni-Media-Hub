@@ -3,6 +3,7 @@ package com.lament.z.omni.mhub.service;
 import com.lament.z.omni.mhub.model.ResourceCollection;
 import com.lament.z.omni.mhub.model.dto.ResCollectionDTO;
 import com.lament.z.omni.mhub.repository.ResourceCollectionRepository;
+import com.lament.z.omni.mhub.repository.ResourceRelationRepository;
 import com.lament.z.omni.mhub.repository.VideoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +20,12 @@ public class ResourceCollectionService {
 	private static final Logger log = LoggerFactory.getLogger(ResourceCollectionService.class);
 	private final ResourceCollectionRepository resourceCollectionRepository;
 	private final VideoRepository videoRepository;
+	private final ResourceRelationRepository resourceRelationRepository;
 
-	public ResourceCollectionService(ResourceCollectionRepository resourceCollectionRepository, VideoRepository videoRepository) {
+	public ResourceCollectionService(ResourceCollectionRepository resourceCollectionRepository, VideoRepository videoRepository, ResourceRelationRepository resourceRelationRepository) {
 		this.resourceCollectionRepository = resourceCollectionRepository;
 		this.videoRepository = videoRepository;
+		this.resourceRelationRepository = resourceRelationRepository;
 	}
 
 	/**
@@ -61,5 +64,12 @@ public class ResourceCollectionService {
 		Example<ResourceCollection> example = Example.of(rcExample);
 		return resourceCollectionRepository.findAll(example)
 				.map(ResCollectionDTO::new);
+	}
+
+	public Mono<Void> truncateRC() {
+		return resourceCollectionRepository.truncate()
+				.then(videoRepository.truncate())
+				.then(resourceRelationRepository.truncate());
+
 	}
 }

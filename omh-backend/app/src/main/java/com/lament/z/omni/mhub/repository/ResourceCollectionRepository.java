@@ -18,4 +18,8 @@ public interface ResourceCollectionRepository extends R2dbcRepository<ResourceCo
 	@Modifying
 	@Query("update Resource_Collection set visible = 1,last_modified_by ='SYSTEM' where created_by = 'SYSTEM'")
 	Mono<Integer> updateAllToVisible();
+
+	@Modifying
+	@Query("TRUNCATE TABLE Resource_Collection")
+	Mono<Void> truncate();
 }

@@ -3,7 +3,9 @@ package com.lament.z.omni.mhub.repository;
 import com.lament.z.omni.mhub.model.ResourceRelation;
 import com.lament.z.omni.mhub.model.dto.ResDTO;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
+import org.springframework.data.r2dbc.repository.Modifying;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
@@ -25,4 +27,8 @@ public interface ResourceRelationRepository extends R2dbcRepository<ResourceRela
 			+ "where \n"
 			+ "rr.c_id = :rcId")
 	Flux<ResDTO> getResListByRcId(Integer rcId);
+
+	@Modifying
+	@Query("TRUNCATE TABLE Resource_Relation")
+	Mono<Void> truncate();
 }

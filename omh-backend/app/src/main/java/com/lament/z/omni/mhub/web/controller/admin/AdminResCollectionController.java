@@ -58,6 +58,12 @@ public class AdminResCollectionController {
 		return resourceCollectionService.visibleAll();
 	}
 
+	@DeleteMapping("/truncate")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	public Mono<Void> truncateRC(){
+		return resourceCollectionService.truncateRC();
+	}
+
 	/**
 	 * 获取所有合集
 	 * */

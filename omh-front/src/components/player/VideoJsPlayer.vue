@@ -2,7 +2,7 @@
   <div id="omh-video-player">
     <a-row>
       <a-col :span="20">
-        <video ref="videoPlayer" class="video-js">
+        <video ref="videoPlayer" class="video-js vjs-big-play-centered">
           <source :src="resPath" :type="resType" />
         </video>
       </a-col>
@@ -66,7 +66,6 @@ const handlePLClick: MenuProps['onClick'] = e => {
   }else {
     fp = findPathById(e.key)
   }
-  console.log('fp:',fp)
   resPath.value = '/@fs' + fp
   selectedKeys.value = [e.key]
 
